@@ -5,15 +5,11 @@ on:
       crds:
         type: string
         required: true
-        description: 'Comma-separated paths to CRD yaml sources, can be either HTTP url or local file path.'
+        description: ./traefik-crd.yaml
       generatingJavaPackage:
         type: string
         required: true
-        description: 'The package name of the generated java project.'
-      crdApiGroupPrefix:
-        type: string
-        required: false
-        description: 'The prefix of the target CRDs api group to generate. (Optional)'
+        description: com.yinhai.cloud.crd.model.ingress
 
 env:
   IMAGE_NAME: ghcr.io/kubernetes-client/java/crd-model-gen
