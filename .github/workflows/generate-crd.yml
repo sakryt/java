@@ -5,7 +5,7 @@ on:
       crds:
         type: string
         required: true
-        description: https://raw.githubusercontent.com/traefik/traefik/v2.1/docs/content/reference/dynamic-configuration/kubernetes-crd-definition.yml
+        description: https://raw.githubusercontent.com/traefik/traefik/v2.8/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
       generatingJavaPackage:
         type: string
         required: true
