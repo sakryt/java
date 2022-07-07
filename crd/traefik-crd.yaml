@@ -10,21 +10,20 @@ spec:
     plural: ingressroutes
     singular: ingressroute
   scope: Namespaced
-  versions:
-  - name: v1alpha1
+  validation:
     schema:
       openAPIV3Schema:
         description: IngressRoute is an Ingress CRD specification.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
-            of an object. Servers should convert recognized schemas to the latest
-            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+                  of an object. Servers should convert recognized schemas to the latest
+                  internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
             type: string
           kind:
             description: 'Kind is a string value representing the REST resource this
-            object represents. Servers may infer this from the endpoint the client
-            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+                  object represents. Servers may infer this from the endpoint the client
+                  submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
             type: string
           metadata:
             type: object
@@ -131,9 +130,9 @@ spec:
                 type: array
               tls:
                 description: "TLS contains the TLS certificates configuration of the
-                routes. To enable Let's Encrypt, use an empty TLS struct, e.g. in
-                YAML: \n \t tls: {} # inline format \n \t tls: \t   secretName:
-                # block format"
+                      routes. To enable Let's Encrypt, use an empty TLS struct, e.g. in
+                      YAML: \n \t tls: {} # inline format \n \t tls: \t   secretName:
+                      # block format"
                 properties:
                   certResolver:
                     type: string
@@ -183,6 +182,8 @@ spec:
           - metadata
           - spec
         type: object
+  versions:
+  - name: v1alpha1
     served: true
     storage: true
 ---
@@ -198,21 +199,20 @@ spec:
     plural: middlewares
     singular: middleware
   scope: Namespaced
-  versions:
-  - name: v1alpha1
+  validation:
     schema:
       openAPIV3Schema:
         description: Middleware is a specification for a Middleware resource.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+                  of an object. Servers should convert recognized schemas to the latest
+                  internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
             type: string
           kind:
             description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+                  object represents. Servers may infer this from the endpoint the client
+                  submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
             type: string
           metadata:
             type: object
@@ -512,11 +512,11 @@ spec:
                     type: object
                   sslRedirect:
                     description: 'Deprecated: use EntryPoint redirection or RedirectScheme
-                      instead.'
+                          instead.'
                     type: boolean
                   sslTemporaryRedirect:
                     description: 'Deprecated: use EntryPoint redirection or RedirectScheme
-                      instead.'
+                          instead.'
                     type: boolean
                   stsIncludeSubdomains:
                     type: boolean
@@ -739,6 +739,8 @@ spec:
           - metadata
           - spec
         type: object
+  versions:
+  - name: v1alpha1
     served: true
     storage: true
 
@@ -755,21 +757,20 @@ spec:
     plural: ingressroutetcps
     singular: ingressroutetcp
   scope: Namespaced
-  versions:
-  - name: v1alpha1
+  validation:
     schema:
       openAPIV3Schema:
         description: IngressRouteTCP is an Ingress CRD specification.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+                  of an object. Servers should convert recognized schemas to the latest
+                  internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
             type: string
           kind:
             description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+                  object represents. Servers may infer this from the endpoint the client
+                  submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
             type: string
           metadata:
             type: object
@@ -836,9 +837,9 @@ spec:
                 type: array
               tls:
                 description: "TLSTCP contains the TLS certificates configuration of
-                  the routes. To enable Let's Encrypt, use an empty TLS struct, e.g.
-                  in YAML: \n \t tls: {} # inline format \n \t tls: \t   secretName:
-                  # block format"
+                      the routes. To enable Let's Encrypt, use an empty TLS struct, e.g.
+                      in YAML: \n \t tls: {} # inline format \n \t tls: \t   secretName:
+                      # block format"
                 properties:
                   certResolver:
                     type: string
@@ -890,6 +891,8 @@ spec:
           - metadata
           - spec
         type: object
+  versions:
+  - name: v1alpha1
     served: true
     storage: true
 
@@ -906,21 +909,20 @@ spec:
     plural: ingressrouteudps
     singular: ingressrouteudp
   scope: Namespaced
-  versions:
-  - name: v1alpha1
+  validation:
     schema:
       openAPIV3Schema:
         description: IngressRouteUDP is an Ingress CRD specification.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
-            of an object. Servers should convert recognized schemas to the latest
-            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+                of an object. Servers should convert recognized schemas to the latest
+                internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
             type: string
           kind:
             description: 'Kind is a string value representing the REST resource this
-            object represents. Servers may infer this from the endpoint the client
-            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+                object represents. Servers may infer this from the endpoint the client
+                submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
             type: string
           metadata:
             type: object
@@ -965,6 +967,8 @@ spec:
           - metadata
           - spec
         type: object
+  versions:
+  - name: v1alpha1
     served: true
     storage: true
 
@@ -981,21 +985,20 @@ spec:
     plural: tlsoptions
     singular: tlsoption
   scope: Namespaced
-  versions:
-  - name: v1alpha1
+  validation:
     schema:
       openAPIV3Schema:
         description: TLSOption is a specification for a TLSOption resource.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
-            of an object. Servers should convert recognized schemas to the latest
-            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+                of an object. Servers should convert recognized schemas to the latest
+                internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
             type: string
           kind:
             description: 'Kind is a string value representing the REST resource this
-            object represents. Servers may infer this from the endpoint the client
-            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+                object represents. Servers may infer this from the endpoint the client
+                submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
             type: string
           metadata:
             type: object
@@ -1048,6 +1051,8 @@ spec:
           - metadata
           - spec
         type: object
+  versions:
+  - name: v1alpha1
     served: true
     storage: true
 
@@ -1064,21 +1069,20 @@ spec:
     plural: tlsstores
     singular: tlsstore
   scope: Namespaced
-  versions:
-  - name: v1alpha1
+  validation:
     schema:
       openAPIV3Schema:
         description: TLSStore is a specification for a TLSStore resource.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
-            of an object. Servers should convert recognized schemas to the latest
-            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+                of an object. Servers should convert recognized schemas to the latest
+                internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
             type: string
           kind:
             description: 'Kind is a string value representing the REST resource this
-            object represents. Servers may infer this from the endpoint the client
-            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+                object represents. Servers may infer this from the endpoint the client
+                submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
             type: string
           metadata:
             type: object
@@ -1103,6 +1107,8 @@ spec:
           - metadata
           - spec
         type: object
+  versions:
+  - name: v1alpha1
     served: true
     storage: true
 
@@ -1119,8 +1125,7 @@ spec:
     plural: traefikservices
     singular: traefikservice
   scope: Namespaced
-  versions:
-  - name: v1alpha1
+  validation:
     schema:
       openAPIV3Schema:
         description: TraefikService is the specification for a service (that an IngressRoute
@@ -1130,13 +1135,13 @@ spec:
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
-            of an object. Servers should convert recognized schemas to the latest
-            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+                of an object. Servers should convert recognized schemas to the latest
+                internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
             type: string
           kind:
             description: 'Kind is a string value representing the REST resource this
-            object represents. Servers may infer this from the endpoint the client
-            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+                object represents. Servers may infer this from the endpoint the client
+                submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
             type: string
           metadata:
             type: object
@@ -1364,5 +1369,7 @@ spec:
           - metadata
           - spec
         type: object
+  versions:
+  - name: v1alpha1
     served: true
     storage: true
