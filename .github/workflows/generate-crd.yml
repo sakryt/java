@@ -5,7 +5,7 @@ on:
       crds:
         type: string
         required: true
-        description: https://github.com/sakryt/java/blob/master/.github/workflows/traefik-crd.yaml
+        description: https://raw.githubusercontent.com/sakryt/java/master/crd/traefik-crd.yaml
       generatingJavaPackage:
         type: string
         required: true
