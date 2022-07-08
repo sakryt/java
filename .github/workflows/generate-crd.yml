@@ -5,11 +5,11 @@ on:
       crds:
         type: string
         required: true
-        description: https://raw.githubusercontent.com/traefik/traefik/v2.8/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
+        description: https://raw.githubusercontent.com/OT-CONTAINER-KIT/redis-operator/master/config/crd/bases/redis.redis.opstreelabs.in_redis.yaml
       generatingJavaPackage:
         type: string
         required: true
-        description: com.yinhai.cloud.crd.model.ingress
+        description: com.yinhai.cloud.crd.model.redis
 
 env:
   IMAGE_NAME: ghcr.io/kubernetes-client/java/crd-model-gen
