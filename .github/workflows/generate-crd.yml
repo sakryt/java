@@ -5,7 +5,7 @@ on:
       crds:
         type: string
         required: true
-        description: https://raw.githubusercontent.com/OT-CONTAINER-KIT/redis-operator/master/config/crd/bases/redis.redis.opstreelabs.in_redis.yaml
+        description: https://raw.githubusercontent.com/sakryt/java/master/crd/redis.yaml
       generatingJavaPackage:
         type: string
         required: true
