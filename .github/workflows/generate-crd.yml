@@ -9,7 +9,7 @@ on:
       generatingJavaPackage:
         type: string
         required: true
-        description: com.yinhai.cloud.module.kubernetes.object.extension.models.snapshotter
+        description: com.yinhai.cloud.crd.model.volumesnapshot
 
 env:
   IMAGE_NAME: ghcr.io/kubernetes-client/java/crd-model-gen
