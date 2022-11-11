@@ -5,7 +5,7 @@ on:
       crds:
         type: string
         required: true
-        description: https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshotcontents.yaml
+        description: https://raw.githubusercontent.com/sakryt/java/master/crd/volume-snapshot.yaml
       generatingJavaPackage:
         type: string
         required: true
