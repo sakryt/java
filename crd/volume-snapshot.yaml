@@ -41,6 +41,13 @@ spec:
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
             type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
           deletionPolicy:
             description: deletionPolicy determines whether a VolumeSnapshotContent
               created through the VolumeSnapshotClass should be deleted when its bound
@@ -56,11 +63,6 @@ spec:
           driver:
             description: driver is the name of the storage driver that handles this
               VolumeSnapshotClass. Required.
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
             type: string
           parameters:
             additionalProperties:
@@ -148,6 +150,8 @@ spec:
               object represents. Servers may infer this from the endpoint the client
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
             type: string
+          metadata:
+            type: object
           spec:
             description: spec defines properties of a VolumeSnapshotContent created
               by the underlying storage system. Required.
@@ -385,6 +389,8 @@ spec:
               object represents. Servers may infer this from the endpoint the client
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
             type: string
+          metadata:
+            type: object
           spec:
             description: 'spec defines the desired characteristics of a snapshot requested
               by a user. More info: https://kubernetes.io/docs/concepts/storage/volume-snapshots#volumesnapshots
