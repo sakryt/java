@@ -5,11 +5,11 @@ on:
       crds:
         type: string
         required: true
-        description: https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-3.1/client/config/crd/snapshot.storage.k8s.io_volumesnapshotclasses.yaml
+        description: https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshotcontents.yaml
       generatingJavaPackage:
         type: string
         required: true
-        description: com.yinhai.cloud.crd.model.snapshot
+        description: com.yinhai.cloud.crd.model.volumesnapshot
 
 env:
   IMAGE_NAME: ghcr.io/kubernetes-client/java/crd-model-gen
