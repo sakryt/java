@@ -16,19 +16,7 @@ spec:
     singular: volumesnapshotclass
   scope: Cluster
   versions:
-  - additionalPrinterColumns:
-    - jsonPath: .driver
-      name: Driver
-      type: string
-    - description: Determines whether a VolumeSnapshotContent created through the
-        VolumeSnapshotClass should be deleted when its bound VolumeSnapshot is deleted.
-      jsonPath: .deletionPolicy
-      name: DeletionPolicy
-      type: string
-    - jsonPath: .metadata.creationTimestamp
-      name: Age
-      type: date
-    name: v1beta1
+  - name: v1beta1
     schema:
       openAPIV3Schema:
         description: VolumeSnapshotClass specifies parameters that a underlying storage
@@ -102,39 +90,7 @@ spec:
     singular: volumesnapshotcontent
   scope: Cluster
   versions:
-  - additionalPrinterColumns:
-    - description: Indicates if a snapshot is ready to be used to restore a volume.
-      jsonPath: .status.readyToUse
-      name: ReadyToUse
-      type: boolean
-    - description: Represents the complete size of the snapshot in bytes
-      jsonPath: .status.restoreSize
-      name: RestoreSize
-      type: integer
-    - description: Determines whether this VolumeSnapshotContent and its physical
-        snapshot on the underlying storage system should be deleted when its bound
-        VolumeSnapshot is deleted.
-      jsonPath: .spec.deletionPolicy
-      name: DeletionPolicy
-      type: string
-    - description: Name of the CSI driver used to create the physical snapshot on
-        the underlying storage system.
-      jsonPath: .spec.driver
-      name: Driver
-      type: string
-    - description: Name of the VolumeSnapshotClass to which this snapshot belongs.
-      jsonPath: .spec.volumeSnapshotClassName
-      name: VolumeSnapshotClass
-      type: string
-    - description: Name of the VolumeSnapshot object to which this VolumeSnapshotContent
-        object is bound.
-      jsonPath: .spec.volumeSnapshotRef.name
-      name: VolumeSnapshot
-      type: string
-    - jsonPath: .metadata.creationTimestamp
-      name: Age
-      type: date
-    name: v1beta1
+  - name: v1beta1
     schema:
       openAPIV3Schema:
         description: VolumeSnapshotContent represents the actual "on-disk" snapshot
@@ -337,43 +293,7 @@ spec:
     singular: volumesnapshot
   scope: Namespaced
   versions:
-  - additionalPrinterColumns:
-    - description: Indicates if a snapshot is ready to be used to restore a volume.
-      jsonPath: .status.readyToUse
-      name: ReadyToUse
-      type: boolean
-    - description: Name of the source PVC from where a dynamically taken snapshot
-        will be created.
-      jsonPath: .spec.source.persistentVolumeClaimName
-      name: SourcePVC
-      type: string
-    - description: Name of the VolumeSnapshotContent which represents a pre-provisioned
-        snapshot.
-      jsonPath: .spec.source.volumeSnapshotContentName
-      name: SourceSnapshotContent
-      type: string
-    - description: Represents the complete size of the snapshot.
-      jsonPath: .status.restoreSize
-      name: RestoreSize
-      type: string
-    - description: The name of the VolumeSnapshotClass requested by the VolumeSnapshot.
-      jsonPath: .spec.volumeSnapshotClassName
-      name: SnapshotClass
-      type: string
-    - description: The name of the VolumeSnapshotContent to which this VolumeSnapshot
-        is bound.
-      jsonPath: .status.boundVolumeSnapshotContentName
-      name: SnapshotContent
-      type: string
-    - description: Timestamp when the point-in-time snapshot is taken by the underlying
-        storage system.
-      jsonPath: .status.creationTime
-      name: CreationTime
-      type: date
-    - jsonPath: .metadata.creationTimestamp
-      name: Age
-      type: date
-    name: v1beta1
+  - name: v1beta1
     schema:
       openAPIV3Schema:
         description: VolumeSnapshot is a user's request for either creating a point-in-time
