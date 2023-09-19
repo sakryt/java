@@ -5,11 +5,11 @@ on:
       crds:
         type: string
         required: true
-        description: https://raw.githubusercontent.com/sakryt/java/master/crd/volume-snapshot.yaml
+        description: https://raw.githubusercontent.com/liuyimzp/java/master/traefikCrd
       generatingJavaPackage:
         type: string
         required: true
-        description: com.yinhai.cloud.crd.model.volumesnapshot
+        description: com.yinhai.cloud.app.kubernetes
 
 env:
   IMAGE_NAME: ghcr.io/kubernetes-client/java/crd-model-gen
