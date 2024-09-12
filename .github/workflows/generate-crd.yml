@@ -9,7 +9,7 @@ on:
       generatingJavaPackage:
         type: string
         required: true
-        description: 'com.yinhai.yyfbxt.istio'
+        description: 'com.yinhai.yyfbxt.gateway'
       crdApiGroupPrefix:
         type: string
         required: false
