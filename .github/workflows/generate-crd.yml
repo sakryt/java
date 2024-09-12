@@ -5,7 +5,7 @@ on:
       crds:
         type: string
         required: true
-        description: 'https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/main/config/crd/standard/gateway.networking.k8s.io_gatewayclasses.yaml'
+        description: 'https://raw.githubusercontent.com/sakryt/java/master/crd/gateway.networking.k8s.io_gatewayclasses.yaml'
       generatingJavaPackage:
         type: string
         required: true
