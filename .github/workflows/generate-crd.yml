@@ -5,11 +5,11 @@ on:
       crds:
         type: string
         required: true
-        description: 'Comma-separated paths to CRD yaml sources, can be either HTTP url or local file path.'
+        description: 'https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/main/config/crd/standard/gateway.networking.k8s.io_gatewayclasses.yaml'
       generatingJavaPackage:
         type: string
         required: true
-        description: 'The package name of the generated java project.'
+        description: 'com.yinhai.yyfbxt.istio'
       crdApiGroupPrefix:
         type: string
         required: false
