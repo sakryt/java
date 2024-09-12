@@ -18,13 +18,15 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-import com.github.tomakehurst.wiremock.core.Admin;
 import com.github.tomakehurst.wiremock.extension.Parameters;
-import com.github.tomakehurst.wiremock.extension.PostServeAction;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import io.kubernetes.client.Exec.ExecProcess;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.ApiException;
@@ -40,25 +42,13 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import java.util.function.Consumer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /** Tests for the Exec helper class */
-public class ExecTest {
-
-  public static class CountRequestAction extends PostServeAction {
-    @Override
-    public String getName() {
-      return "semaphore";
-    }
-
-    @Override
-    public void doAction(ServeEvent serveEvent, Admin admin, Parameters parameters) {
-      Semaphore count = (Semaphore) parameters.get("semaphore");
-      count.release();
-    }
-  }
+class ExecTest {
 
   private static final String OUTPUT_EXIT0 = "{\"metadata\":{},\"status\":\"Success\"}";
   private static final String OUTPUT_EXIT1 =
@@ -76,11 +66,13 @@ public class ExecTest {
 
   private ApiClient client;
 
-  @Rule public WireMockRule wireMockRule = new WireMockRule(options().dynamicPort());
+  @RegisterExtension
+  static WireMockExtension apiServer =
+      WireMockExtension.newInstance().options(options().dynamicPort()).build();
 
-  @Before
-  public void setup() throws IOException {
-    client = new ClientBuilder().setBasePath("http://localhost:" + wireMockRule.port()).build();
+  @BeforeEach
+  void setup() {
+    client = new ClientBuilder().setBasePath("http://localhost:" + apiServer.getPort()).build();
 
     namespace = "default";
     podName = "apod";
@@ -121,7 +113,7 @@ public class ExecTest {
   }
 
   @Test
-  public void testExecProcess() throws IOException, InterruptedException {
+  void execProcess() throws IOException, InterruptedException {
     final ExecProcess process = new ExecProcess(client);
     process.getHandler().open("wss", null);
     String msgData = "This is the stdout message";
@@ -141,15 +133,47 @@ public class ExecTest {
     cLatch.await();
     process.destroy();
 
-    assertEquals(msgData, stdout.toString());
-    assertEquals(errData, stderr.toString());
-    assertEquals(false, process.isAlive());
-    assertEquals(0, process.exitValue());
+    assertThat(stdout).hasToString(msgData);
+    assertThat(stderr).hasToString(errData);
+    assertThat(process.isAlive()).isFalse();
+    assertThat(process.exitValue()).isZero();
   }
 
   @Test
-  public void testUrl() throws IOException, ApiException, InterruptedException {
+  void defaultUnhandledError() throws IOException, InterruptedException {
+    final Throwable throwable = mock(Throwable.class);
+    final ExecProcess process = new ExecProcess(client);
+    process.getHandler().open("wss", null);
+
+    process.getHandler().failure(throwable);
+    process.waitFor();
+
+    verify(throwable, times(1)).printStackTrace();
+    assertThat(process.isAlive()).isFalse();
+    assertThat(process.exitValue()).isEqualTo(-1975219);
+  }
+
+  @Test
+  void customUnhandledError() throws IOException, InterruptedException {
+    final Consumer<Throwable> consumer = mock(Consumer.class);
+    final Throwable throwable = mock(Throwable.class);
+    final ExecProcess process = new ExecProcess(client, consumer);
+    process.getHandler().open("wss", null);
+
+    process.getHandler().failure(throwable);
+    process.waitFor();
+
+    verify(throwable, times(0)).printStackTrace();
+    verify(consumer, times(1)).accept(throwable);
+    assertThat(process.isAlive()).isFalse();
+    assertThat(process.exitValue()).isEqualTo(-1975219);
+  }
+
+  @Test
+  void url() throws IOException, ApiException, InterruptedException {
+    final Consumer<Throwable> consumer = mock(Consumer.class);
     Exec exec = new Exec(client);
+    exec.setOnUnhandledError(consumer);
 
     V1Pod pod = new V1Pod().metadata(new V1ObjectMeta().name(podName).namespace(namespace));
 
@@ -157,7 +181,7 @@ public class ExecTest {
     Parameters getParams = new Parameters();
     getParams.put("semaphore", getCount);
 
-    wireMockRule.stubFor(
+    apiServer.stubFor(
         get(urlPathEqualTo("/api/v1/namespaces/" + namespace + "/pods/" + podName + "/exec"))
             .withPostServeAction("semaphore", getParams)
             .willReturn(
@@ -181,7 +205,7 @@ public class ExecTest {
     // by WireMock. This fixes it.
     getCount.acquire(2);
 
-    wireMockRule.verify(
+    apiServer.verify(
         getRequestedFor(
                 urlPathEqualTo("/api/v1/namespaces/" + namespace + "/pods/" + podName + "/exec"))
             .withQueryParam("stdin", equalTo("true"))
@@ -191,7 +215,7 @@ public class ExecTest {
             .withQueryParam("tty", equalTo("false"))
             .withQueryParam("command", equalTo("cmd")));
 
-    wireMockRule.verify(
+    apiServer.verify(
         getRequestedFor(
                 urlPathEqualTo("/api/v1/namespaces/" + namespace + "/pods/" + podName + "/exec"))
             .withQueryParam("stdin", equalTo("false"))
@@ -201,46 +225,61 @@ public class ExecTest {
             .withQueryParam("tty", equalTo("false"))
             .withQueryParam("command", equalTo("cmd")));
 
-    assertEquals(-1975219, p.exitValue());
+    assertThat(p.exitValue()).isEqualTo(-1975219);
+    verify(consumer, times(1)).accept(any(Throwable.class));
   }
 
   @Test
-  public void testExit0() {
+  void exit0() {
     InputStream inputStream =
         new ByteArrayInputStream(OUTPUT_EXIT0.getBytes(StandardCharsets.UTF_8));
     int exitCode = Exec.parseExitCode(client, inputStream);
-    assertEquals(0, exitCode);
+    assertThat(exitCode).isZero();
   }
 
   @Test
-  public void testExit1() {
+  void exit1() {
     InputStream inputStream =
         new ByteArrayInputStream(OUTPUT_EXIT1.getBytes(StandardCharsets.UTF_8));
     int exitCode = Exec.parseExitCode(client, inputStream);
-    assertEquals(1, exitCode);
+    assertThat(exitCode).isEqualTo(1);
   }
 
   @Test
-  public void testExit126() {
+  void exit126() {
     InputStream inputStream =
         new ByteArrayInputStream(OUTPUT_EXIT126.getBytes(StandardCharsets.UTF_8));
     int exitCode = Exec.parseExitCode(client, inputStream);
-    assertEquals(126, exitCode);
+    assertThat(exitCode).isEqualTo(126);
   }
 
   @Test
-  public void testIncompleteData1() {
+  void incompleteData1() {
     InputStream inputStream =
         new ByteArrayInputStream(BAD_OUTPUT_INCOMPLETE_MSG1.getBytes(StandardCharsets.UTF_8));
     int exitCode = Exec.parseExitCode(client, inputStream);
-    assertEquals(-1, exitCode);
+    assertThat(exitCode).isEqualTo(-1);
   }
 
   @Test
-  public void testNonZeroBadIntExit() {
+  void nonZeroBadIntExit() {
     InputStream inputStream =
         new ByteArrayInputStream(OUTPUT_EXIT_BAD_INT.getBytes(StandardCharsets.UTF_8));
     int exitCode = Exec.parseExitCode(client, inputStream);
-    assertEquals(-1, exitCode);
+    assertThat(exitCode).isEqualTo(-1);
+  }
+
+  @Test
+  void executionBuilderNull() {
+    Exec exec = new Exec(null);
+    assertThatThrownBy(() -> {
+      exec.newExecutionBuilder(null, null, null);
+    }).isInstanceOf(NullPointerException.class);
+    assertThatThrownBy(() -> {
+      exec.newExecutionBuilder("", null, null);
+    }).isInstanceOf(NullPointerException.class);
+    assertThatThrownBy(() -> {
+      exec.newExecutionBuilder("", "", null);
+    }).isInstanceOf(NullPointerException.class);
   }
 }

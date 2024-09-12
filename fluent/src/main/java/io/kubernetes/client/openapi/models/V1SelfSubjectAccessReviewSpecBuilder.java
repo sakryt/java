@@ -1,83 +1,32 @@
-/*
-Copyright 2022 The Kubernetes Authors.
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package io.kubernetes.client.openapi.models;
 
 import io.kubernetes.client.fluent.VisitableBuilder;
-
-public class V1SelfSubjectAccessReviewSpecBuilder
-    extends V1SelfSubjectAccessReviewSpecFluentImpl<V1SelfSubjectAccessReviewSpecBuilder>
-    implements VisitableBuilder<
-        io.kubernetes.client.openapi.models.V1SelfSubjectAccessReviewSpec,
-        io.kubernetes.client.openapi.models.V1SelfSubjectAccessReviewSpecBuilder> {
+public class V1SelfSubjectAccessReviewSpecBuilder extends V1SelfSubjectAccessReviewSpecFluent<V1SelfSubjectAccessReviewSpecBuilder> implements VisitableBuilder<V1SelfSubjectAccessReviewSpec,V1SelfSubjectAccessReviewSpecBuilder>{
   public V1SelfSubjectAccessReviewSpecBuilder() {
-    this(false);
+    this(new V1SelfSubjectAccessReviewSpec());
   }
-
-  public V1SelfSubjectAccessReviewSpecBuilder(Boolean validationEnabled) {
-    this(new V1SelfSubjectAccessReviewSpec(), validationEnabled);
-  }
-
+  
   public V1SelfSubjectAccessReviewSpecBuilder(V1SelfSubjectAccessReviewSpecFluent<?> fluent) {
-    this(fluent, false);
+    this(fluent, new V1SelfSubjectAccessReviewSpec());
   }
-
-  public V1SelfSubjectAccessReviewSpecBuilder(
-      io.kubernetes.client.openapi.models.V1SelfSubjectAccessReviewSpecFluent<?> fluent,
-      java.lang.Boolean validationEnabled) {
-    this(fluent, new V1SelfSubjectAccessReviewSpec(), validationEnabled);
-  }
-
-  public V1SelfSubjectAccessReviewSpecBuilder(
-      io.kubernetes.client.openapi.models.V1SelfSubjectAccessReviewSpecFluent<?> fluent,
-      io.kubernetes.client.openapi.models.V1SelfSubjectAccessReviewSpec instance) {
-    this(fluent, instance, false);
-  }
-
-  public V1SelfSubjectAccessReviewSpecBuilder(
-      io.kubernetes.client.openapi.models.V1SelfSubjectAccessReviewSpecFluent<?> fluent,
-      io.kubernetes.client.openapi.models.V1SelfSubjectAccessReviewSpec instance,
-      java.lang.Boolean validationEnabled) {
+  
+  public V1SelfSubjectAccessReviewSpecBuilder(V1SelfSubjectAccessReviewSpecFluent<?> fluent,V1SelfSubjectAccessReviewSpec instance) {
     this.fluent = fluent;
-    fluent.withNonResourceAttributes(instance.getNonResourceAttributes());
-
-    fluent.withResourceAttributes(instance.getResourceAttributes());
-
-    this.validationEnabled = validationEnabled;
+    fluent.copyInstance(instance);
   }
-
-  public V1SelfSubjectAccessReviewSpecBuilder(
-      io.kubernetes.client.openapi.models.V1SelfSubjectAccessReviewSpec instance) {
-    this(instance, false);
-  }
-
-  public V1SelfSubjectAccessReviewSpecBuilder(
-      io.kubernetes.client.openapi.models.V1SelfSubjectAccessReviewSpec instance,
-      java.lang.Boolean validationEnabled) {
+  
+  public V1SelfSubjectAccessReviewSpecBuilder(V1SelfSubjectAccessReviewSpec instance) {
     this.fluent = this;
-    this.withNonResourceAttributes(instance.getNonResourceAttributes());
-
-    this.withResourceAttributes(instance.getResourceAttributes());
-
-    this.validationEnabled = validationEnabled;
+    this.copyInstance(instance);
   }
-
-  io.kubernetes.client.openapi.models.V1SelfSubjectAccessReviewSpecFluent<?> fluent;
-  java.lang.Boolean validationEnabled;
-
-  public io.kubernetes.client.openapi.models.V1SelfSubjectAccessReviewSpec build() {
+  V1SelfSubjectAccessReviewSpecFluent<?> fluent;
+  
+  public V1SelfSubjectAccessReviewSpec build() {
     V1SelfSubjectAccessReviewSpec buildable = new V1SelfSubjectAccessReviewSpec();
-    buildable.setNonResourceAttributes(fluent.getNonResourceAttributes());
-    buildable.setResourceAttributes(fluent.getResourceAttributes());
+    buildable.setNonResourceAttributes(fluent.buildNonResourceAttributes());
+    buildable.setResourceAttributes(fluent.buildResourceAttributes());
     return buildable;
   }
+  
+
 }

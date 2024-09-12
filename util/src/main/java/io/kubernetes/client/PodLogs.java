@@ -80,21 +80,23 @@ public class PodLogs {
       boolean timestamps)
       throws ApiException, IOException {
     Call call =
-        coreClient.readNamespacedPodLogCall(
+        coreClient.readNamespacedPodLog(
             name,
-            namespace,
-            container,
-            true,
-            null,
-            null,
-            "false",
-            false,
-            sinceSeconds,
-            tailLines,
-            timestamps,
-            null);
+            namespace)
+                .container(container)
+                .follow(true)
+                .pretty("false")
+                .previous(false)
+                .sinceSeconds(sinceSeconds)
+                .tailLines(tailLines)
+                .timestamps(timestamps)
+                .buildCall(null);
+
     Response response = call.execute();
     if (!response.isSuccessful()) {
+      if (response.body() != null) {
+        response.close();
+      }
       throw new ApiException(response.code(), "Logs request failed: " + response.code());
     }
     return response.body().byteStream();

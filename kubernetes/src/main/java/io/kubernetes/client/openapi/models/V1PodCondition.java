@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Kubernetes Authors.
+Copyright 2024 The Kubernetes Authors.
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -12,47 +12,72 @@ limitations under the License.
 */
 package io.kubernetes.client.openapi.models;
 
-import com.google.gson.annotations.SerializedName;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
 import java.util.Objects;
+import java.util.Arrays;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import java.io.IOException;
+import java.time.OffsetDateTime;
 
-/** PodCondition contains details for the current condition of this pod. */
-@ApiModel(description = "PodCondition contains details for the current condition of this pod.")
-@javax.annotation.Generated(
-    value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    date = "2022-05-06T16:45:00.555Z[Etc/UTC]")
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import java.io.IOException;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import io.kubernetes.client.openapi.JSON;
+
+/**
+ * PodCondition contains details for the current condition of this pod.
+ */
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2024-04-23T13:45:09.091597Z[Etc/UTC]")
 public class V1PodCondition {
   public static final String SERIALIZED_NAME_LAST_PROBE_TIME = "lastProbeTime";
-
   @SerializedName(SERIALIZED_NAME_LAST_PROBE_TIME)
   private OffsetDateTime lastProbeTime;
 
   public static final String SERIALIZED_NAME_LAST_TRANSITION_TIME = "lastTransitionTime";
-
   @SerializedName(SERIALIZED_NAME_LAST_TRANSITION_TIME)
   private OffsetDateTime lastTransitionTime;
 
   public static final String SERIALIZED_NAME_MESSAGE = "message";
-
   @SerializedName(SERIALIZED_NAME_MESSAGE)
   private String message;
 
   public static final String SERIALIZED_NAME_REASON = "reason";
-
   @SerializedName(SERIALIZED_NAME_REASON)
   private String reason;
 
   public static final String SERIALIZED_NAME_STATUS = "status";
-
   @SerializedName(SERIALIZED_NAME_STATUS)
   private String status;
 
   public static final String SERIALIZED_NAME_TYPE = "type";
-
   @SerializedName(SERIALIZED_NAME_TYPE)
   private String type;
+
+  public V1PodCondition() {
+  }
 
   public V1PodCondition lastProbeTime(OffsetDateTime lastProbeTime) {
 
@@ -60,20 +85,20 @@ public class V1PodCondition {
     return this;
   }
 
-  /**
+   /**
    * Last time we probed the condition.
-   *
    * @return lastProbeTime
-   */
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "Last time we probed the condition.")
+  **/
+  @jakarta.annotation.Nullable
   public OffsetDateTime getLastProbeTime() {
     return lastProbeTime;
   }
 
+
   public void setLastProbeTime(OffsetDateTime lastProbeTime) {
     this.lastProbeTime = lastProbeTime;
   }
+
 
   public V1PodCondition lastTransitionTime(OffsetDateTime lastTransitionTime) {
 
@@ -81,20 +106,20 @@ public class V1PodCondition {
     return this;
   }
 
-  /**
+   /**
    * Last time the condition transitioned from one status to another.
-   *
    * @return lastTransitionTime
-   */
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "Last time the condition transitioned from one status to another.")
+  **/
+  @jakarta.annotation.Nullable
   public OffsetDateTime getLastTransitionTime() {
     return lastTransitionTime;
   }
 
+
   public void setLastTransitionTime(OffsetDateTime lastTransitionTime) {
     this.lastTransitionTime = lastTransitionTime;
   }
+
 
   public V1PodCondition message(String message) {
 
@@ -102,20 +127,20 @@ public class V1PodCondition {
     return this;
   }
 
-  /**
+   /**
    * Human-readable message indicating details about last transition.
-   *
    * @return message
-   */
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "Human-readable message indicating details about last transition.")
+  **/
+  @jakarta.annotation.Nullable
   public String getMessage() {
     return message;
   }
 
+
   public void setMessage(String message) {
     this.message = message;
   }
+
 
   public V1PodCondition reason(String reason) {
 
@@ -123,21 +148,20 @@ public class V1PodCondition {
     return this;
   }
 
-  /**
+   /**
    * Unique, one-word, CamelCase reason for the condition&#39;s last transition.
-   *
    * @return reason
-   */
-  @javax.annotation.Nullable
-  @ApiModelProperty(
-      value = "Unique, one-word, CamelCase reason for the condition's last transition.")
+  **/
+  @jakarta.annotation.Nullable
   public String getReason() {
     return reason;
   }
 
+
   public void setReason(String reason) {
     this.reason = reason;
   }
+
 
   public V1PodCondition status(String status) {
 
@@ -145,23 +169,20 @@ public class V1PodCondition {
     return this;
   }
 
-  /**
-   * Status is the status of the condition. Can be True, False, Unknown. More info:
-   * https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-conditions
-   *
+   /**
+   * Status is the status of the condition. Can be True, False, Unknown. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-conditions
    * @return status
-   */
-  @ApiModelProperty(
-      required = true,
-      value =
-          "Status is the status of the condition. Can be True, False, Unknown. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-conditions")
+  **/
+  @jakarta.annotation.Nonnull
   public String getStatus() {
     return status;
   }
 
+
   public void setStatus(String status) {
     this.status = status;
   }
+
 
   public V1PodCondition type(String type) {
 
@@ -169,26 +190,24 @@ public class V1PodCondition {
     return this;
   }
 
-  /**
-   * Type is the type of the condition. More info:
-   * https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-conditions
-   *
+   /**
+   * Type is the type of the condition. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-conditions
    * @return type
-   */
-  @ApiModelProperty(
-      required = true,
-      value =
-          "Type is the type of the condition. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-conditions")
+  **/
+  @jakarta.annotation.Nonnull
   public String getType() {
     return type;
   }
+
 
   public void setType(String type) {
     this.type = type;
   }
 
+
+
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -196,12 +215,12 @@ public class V1PodCondition {
       return false;
     }
     V1PodCondition v1PodCondition = (V1PodCondition) o;
-    return Objects.equals(this.lastProbeTime, v1PodCondition.lastProbeTime)
-        && Objects.equals(this.lastTransitionTime, v1PodCondition.lastTransitionTime)
-        && Objects.equals(this.message, v1PodCondition.message)
-        && Objects.equals(this.reason, v1PodCondition.reason)
-        && Objects.equals(this.status, v1PodCondition.status)
-        && Objects.equals(this.type, v1PodCondition.type);
+    return Objects.equals(this.lastProbeTime, v1PodCondition.lastProbeTime) &&
+        Objects.equals(this.lastTransitionTime, v1PodCondition.lastTransitionTime) &&
+        Objects.equals(this.message, v1PodCondition.message) &&
+        Objects.equals(this.reason, v1PodCondition.reason) &&
+        Objects.equals(this.status, v1PodCondition.status) &&
+        Objects.equals(this.type, v1PodCondition.type);
   }
 
   @Override
@@ -224,12 +243,123 @@ public class V1PodCondition {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n    ");
+  }
+
+
+  public static HashSet<String> openapiFields;
+  public static HashSet<String> openapiRequiredFields;
+
+  static {
+    // a set of all properties/fields (JSON key names)
+    openapiFields = new HashSet<String>();
+    openapiFields.add("lastProbeTime");
+    openapiFields.add("lastTransitionTime");
+    openapiFields.add("message");
+    openapiFields.add("reason");
+    openapiFields.add("status");
+    openapiFields.add("type");
+
+    // a set of required properties/fields (JSON key names)
+    openapiRequiredFields = new HashSet<String>();
+    openapiRequiredFields.add("status");
+    openapiRequiredFields.add("type");
+  }
+
+ /**
+  * Validates the JSON Object and throws an exception if issues found
+  *
+  * @param jsonObj JSON Object
+  * @throws IOException if the JSON Object is invalid with respect to V1PodCondition
+  */
+  public static void validateJsonObject(JsonObject jsonObj) throws IOException {
+      if (jsonObj == null) {
+        if (!V1PodCondition.openapiRequiredFields.isEmpty()) { // has required fields but JSON object is null
+          throw new IllegalArgumentException(String.format("The required field(s) %s in V1PodCondition is not found in the empty JSON string", V1PodCondition.openapiRequiredFields.toString()));
+        }
+      }
+
+      Set<Entry<String, JsonElement>> entries = jsonObj.entrySet();
+      // check to see if the JSON string contains additional fields
+      for (Entry<String, JsonElement> entry : entries) {
+        if (!V1PodCondition.openapiFields.contains(entry.getKey())) {
+          throw new IllegalArgumentException(String.format("The field `%s` in the JSON string is not defined in the `V1PodCondition` properties. JSON: %s", entry.getKey(), jsonObj.toString()));
+        }
+      }
+
+      // check to make sure all required properties/fields are present in the JSON string
+      for (String requiredField : V1PodCondition.openapiRequiredFields) {
+        if (jsonObj.get(requiredField) == null) {
+          throw new IllegalArgumentException(String.format("The required field `%s` is not found in the JSON string: %s", requiredField, jsonObj.toString()));
+        }
+      }
+      if ((jsonObj.get("message") != null && !jsonObj.get("message").isJsonNull()) && !jsonObj.get("message").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `message` to be a primitive type in the JSON string but got `%s`", jsonObj.get("message").toString()));
+      }
+      if ((jsonObj.get("reason") != null && !jsonObj.get("reason").isJsonNull()) && !jsonObj.get("reason").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `reason` to be a primitive type in the JSON string but got `%s`", jsonObj.get("reason").toString()));
+      }
+      if (!jsonObj.get("status").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `status` to be a primitive type in the JSON string but got `%s`", jsonObj.get("status").toString()));
+      }
+      if (!jsonObj.get("type").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `type` to be a primitive type in the JSON string but got `%s`", jsonObj.get("type").toString()));
+      }
+  }
+
+  public static class CustomTypeAdapterFactory implements TypeAdapterFactory {
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+       if (!V1PodCondition.class.isAssignableFrom(type.getRawType())) {
+         return null; // this class only serializes 'V1PodCondition' and its subtypes
+       }
+       final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
+       final TypeAdapter<V1PodCondition> thisAdapter
+                        = gson.getDelegateAdapter(this, TypeToken.get(V1PodCondition.class));
+
+       return (TypeAdapter<T>) new TypeAdapter<V1PodCondition>() {
+           @Override
+           public void write(JsonWriter out, V1PodCondition value) throws IOException {
+             JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
+             elementAdapter.write(out, obj);
+           }
+
+           @Override
+           public V1PodCondition read(JsonReader in) throws IOException {
+             JsonObject jsonObj = elementAdapter.read(in).getAsJsonObject();
+             validateJsonObject(jsonObj);
+             return thisAdapter.fromJsonTree(jsonObj);
+           }
+
+       }.nullSafe();
+    }
+  }
+
+ /**
+  * Create an instance of V1PodCondition given an JSON string
+  *
+  * @param jsonString JSON string
+  * @return An instance of V1PodCondition
+  * @throws IOException if the JSON string is invalid with respect to V1PodCondition
+  */
+  public static V1PodCondition fromJson(String jsonString) throws IOException {
+    return JSON.getGson().fromJson(jsonString, V1PodCondition.class);
+  }
+
+ /**
+  * Convert an instance of V1PodCondition to an JSON string
+  *
+  * @return JSON string
+  */
+  public String toJson() {
+    return JSON.getGson().toJson(this);
   }
 }

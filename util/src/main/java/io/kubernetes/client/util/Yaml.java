@@ -178,7 +178,7 @@ public class Yaml {
         try {
           list.add(modelMapper((Map<String, Object>) object));
         } catch (ClassCastException ex) {
-          logger.error("Unexpected exception while casting: " + ex);
+          logger.error("Unexpected exception while casting: {}", ex);
         }
       }
     }
@@ -269,6 +269,7 @@ public class Yaml {
 
   public static class CustomRepresenter extends Representer {
     public CustomRepresenter() {
+      super(new DumperOptions());
       this.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
       this.representers.put(IntOrString.class, new RepresentIntOrString());
       this.representers.put(byte[].class, new RepresentByteArray());

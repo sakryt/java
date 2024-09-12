@@ -1,84 +1,32 @@
-/*
-Copyright 2022 The Kubernetes Authors.
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package io.kubernetes.client.openapi.models;
 
 import io.kubernetes.client.fluent.VisitableBuilder;
-
-public class V1NetworkPolicyIngressRuleBuilder
-    extends V1NetworkPolicyIngressRuleFluentImpl<V1NetworkPolicyIngressRuleBuilder>
-    implements VisitableBuilder<
-        V1NetworkPolicyIngressRule,
-        io.kubernetes.client.openapi.models.V1NetworkPolicyIngressRuleBuilder> {
+public class V1NetworkPolicyIngressRuleBuilder extends V1NetworkPolicyIngressRuleFluent<V1NetworkPolicyIngressRuleBuilder> implements VisitableBuilder<V1NetworkPolicyIngressRule,V1NetworkPolicyIngressRuleBuilder>{
   public V1NetworkPolicyIngressRuleBuilder() {
-    this(false);
+    this(new V1NetworkPolicyIngressRule());
   }
-
-  public V1NetworkPolicyIngressRuleBuilder(Boolean validationEnabled) {
-    this(new V1NetworkPolicyIngressRule(), validationEnabled);
+  
+  public V1NetworkPolicyIngressRuleBuilder(V1NetworkPolicyIngressRuleFluent<?> fluent) {
+    this(fluent, new V1NetworkPolicyIngressRule());
   }
-
-  public V1NetworkPolicyIngressRuleBuilder(
-      io.kubernetes.client.openapi.models.V1NetworkPolicyIngressRuleFluent<?> fluent) {
-    this(fluent, false);
-  }
-
-  public V1NetworkPolicyIngressRuleBuilder(
-      io.kubernetes.client.openapi.models.V1NetworkPolicyIngressRuleFluent<?> fluent,
-      java.lang.Boolean validationEnabled) {
-    this(fluent, new V1NetworkPolicyIngressRule(), validationEnabled);
-  }
-
-  public V1NetworkPolicyIngressRuleBuilder(
-      io.kubernetes.client.openapi.models.V1NetworkPolicyIngressRuleFluent<?> fluent,
-      io.kubernetes.client.openapi.models.V1NetworkPolicyIngressRule instance) {
-    this(fluent, instance, false);
-  }
-
-  public V1NetworkPolicyIngressRuleBuilder(
-      io.kubernetes.client.openapi.models.V1NetworkPolicyIngressRuleFluent<?> fluent,
-      io.kubernetes.client.openapi.models.V1NetworkPolicyIngressRule instance,
-      java.lang.Boolean validationEnabled) {
+  
+  public V1NetworkPolicyIngressRuleBuilder(V1NetworkPolicyIngressRuleFluent<?> fluent,V1NetworkPolicyIngressRule instance) {
     this.fluent = fluent;
-    fluent.withFrom(instance.getFrom());
-
-    fluent.withPorts(instance.getPorts());
-
-    this.validationEnabled = validationEnabled;
+    fluent.copyInstance(instance);
   }
-
-  public V1NetworkPolicyIngressRuleBuilder(
-      io.kubernetes.client.openapi.models.V1NetworkPolicyIngressRule instance) {
-    this(instance, false);
-  }
-
-  public V1NetworkPolicyIngressRuleBuilder(
-      io.kubernetes.client.openapi.models.V1NetworkPolicyIngressRule instance,
-      java.lang.Boolean validationEnabled) {
+  
+  public V1NetworkPolicyIngressRuleBuilder(V1NetworkPolicyIngressRule instance) {
     this.fluent = this;
-    this.withFrom(instance.getFrom());
-
-    this.withPorts(instance.getPorts());
-
-    this.validationEnabled = validationEnabled;
+    this.copyInstance(instance);
   }
-
-  io.kubernetes.client.openapi.models.V1NetworkPolicyIngressRuleFluent<?> fluent;
-  java.lang.Boolean validationEnabled;
-
-  public io.kubernetes.client.openapi.models.V1NetworkPolicyIngressRule build() {
+  V1NetworkPolicyIngressRuleFluent<?> fluent;
+  
+  public V1NetworkPolicyIngressRule build() {
     V1NetworkPolicyIngressRule buildable = new V1NetworkPolicyIngressRule();
-    buildable.setFrom(fluent.getFrom());
-    buildable.setPorts(fluent.getPorts());
+    buildable.setFrom(fluent.buildFrom());
+    buildable.setPorts(fluent.buildPorts());
     return buildable;
   }
+  
+
 }

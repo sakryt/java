@@ -24,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -107,7 +108,19 @@ public class LeaderElector implements AutoCloseable {
   }
 
   /**
-   * Runs the leader election in foreground.
+   * Runs the leader election in foreground. The process will enter an acquisition loop trying to
+   * get a lease of the lock object set in configuration. The acquisition loop stops in either of
+   * these scenarios:
+   *
+   * <p>1) An error occurs that prevents us from aquiring a lease.
+   *
+   * <p>2) The LeaderElector successfully acquires leadership. At this point, we will enter a
+   * renewal loop where we will continuously renew the lease following the provided configuration.
+   *
+   * <p>Note that in both cases the LeaderElector will NOT return to the acquisition loop. This is
+   * most relevant when a leader instance loses leadership as the LeaderElector will not try to
+   * re-acquire leadership. To do this, the caller is responsible for explicitly invoking the "run"
+   * method again.
    *
    * @param startLeadingHook called when a LeaderElector client starts leading
    * @param stopLeadingHook called when a LeaderElector client stops leading
@@ -117,7 +130,19 @@ public class LeaderElector implements AutoCloseable {
   }
 
   /**
-   * Runs the leader election in foreground.
+   * Runs the leader election in foreground. The process will enter an acquisition loop trying to
+   * get a lease of the lock object set in configuration. The acquisition loop stops in either of
+   * these scenarios:
+   *
+   * <p>1) An error occurs that prevents us from aquiring a lease.
+   *
+   * <p>2) The LeaderElector successfully acquires leadership. At this point, we will enter a
+   * renewal loop where we will continuously renew the lease following the provided configuration.
+   *
+   * <p>Note that in both cases the LeaderElector will NOT return to the acquisition loop. This is
+   * most relevant when a leader instance loses leadership as the LeaderElector will not try to
+   * re-acquire leadership. To do this, the caller is responsible for explicitly invoking the "run"
+   * method again.
    *
    * @param startLeadingHook called when a LeaderElector client starts leading
    * @param stopLeadingHook called when a LeaderElector client stops leading
@@ -184,7 +209,9 @@ public class LeaderElector implements AutoCloseable {
     } catch (InterruptedException e) {
       log.error("LeaderElection acquire loop gets interrupted", e);
       return false;
-    } finally {
+    } catch (RejectedExecutionException e) {
+      log.info("scheduledWorkers were closed", e);
+    }finally {
       scheduledFuture.cancel(true);
     }
     return true;
@@ -241,6 +268,8 @@ public class LeaderElector implements AutoCloseable {
       }
     } catch (InterruptedException e) {
       log.error("LeaderElection renew loop gets interrupted", e);
+    } catch (RejectedExecutionException e) {
+      log.info("leaseWorkers were closed", e);
     }
   }
 
@@ -383,41 +412,44 @@ public class LeaderElector implements AutoCloseable {
   @Override
   public void close() {
     log.info("Closing...");
-    scheduledWorkers.shutdownNow();
-    leaseWorkers.shutdownNow();
-    hookWorkers.shutdownNow();
+    scheduledWorkers.shutdown();
+    leaseWorkers.shutdown();
+    hookWorkers.shutdown();
+
+    // Ensure that all executors have stopped
+    try {
+      boolean isTerminated = scheduledWorkers.awaitTermination(config.getRetryPeriod().getSeconds(), TimeUnit.SECONDS);
+      if (!isTerminated) {
+        log.warn("Timed out waiting to terminate scheduledWorkers.");
+        scheduledWorkers.shutdownNow();
+      }
+    } catch (InterruptedException ex) {
+      log.warn("Failed to ensure scheduledWorkers termination.", ex);
+      scheduledWorkers.shutdownNow();
+    }
+    try {
+      boolean isTerminated = leaseWorkers.awaitTermination(config.getRetryPeriod().getSeconds(), TimeUnit.SECONDS);
+      if (!isTerminated) {
+        log.warn("Timed out waiting to terminate leaseWorkers.");
+        leaseWorkers.shutdownNow();
+      }
+    } catch (InterruptedException ex) {
+      log.warn("Failed to ensure leaseWorkers termination.", ex);
+      leaseWorkers.shutdownNow();
+    }
+    try {
+      boolean isTerminated = hookWorkers.awaitTermination(config.getRetryPeriod().getSeconds(), TimeUnit.SECONDS);
+      if (!isTerminated) {
+        log.warn("Timed out waiting to terminate hookWorkers.");
+        hookWorkers.shutdownNow();
+      }
+    } catch (InterruptedException ex) {
+      log.warn("Failed to ensure hookWorkers termination.", ex);
+      hookWorkers.shutdownNow();
+    }
 
     // If I am the leader, free the lock so that other candidates can take it immediately
     if (observedRecord != null && isLeader()) {
-
-      // First ensure that all executors have stopped
-      try {
-        boolean isTerminated =
-            scheduledWorkers.awaitTermination(
-                config.getRetryPeriod().getSeconds(), TimeUnit.SECONDS);
-        if (!isTerminated) {
-          log.warn("scheduledWorkers executor termination didn't finish.");
-          return;
-        }
-
-        isTerminated =
-            leaseWorkers.awaitTermination(config.getRetryPeriod().getSeconds(), TimeUnit.SECONDS);
-        if (!isTerminated) {
-          log.warn("leaseWorkers executor termination didn't finish.");
-          return;
-        }
-
-        isTerminated =
-            hookWorkers.awaitTermination(config.getRetryPeriod().getSeconds(), TimeUnit.SECONDS);
-        if (!isTerminated) {
-          log.warn("hookWorkers executor termination didn't finish.");
-          return;
-        }
-      } catch (InterruptedException ex) {
-        log.warn("Failed to ensure executors termination.", ex);
-        return;
-      }
-
       log.info("Giving up the lock....");
       LeaderElectionRecord emptyRecord = new LeaderElectionRecord();
       // maintain leaderTransitions count

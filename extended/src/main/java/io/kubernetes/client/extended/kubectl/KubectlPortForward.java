@@ -24,7 +24,10 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 public class KubectlPortForward
     extends Kubectl.ResourceAndContainerBuilder<V1Pod, KubectlPortForward>
@@ -32,6 +35,7 @@ public class KubectlPortForward
   List<Integer> localPorts;
   List<Integer> targetPorts;
   boolean running;
+  Consumer<Throwable> onUnhandledError = Throwable::printStackTrace;
 
   KubectlPortForward() {
     super(V1Pod.class);
@@ -49,6 +53,11 @@ public class KubectlPortForward
   public KubectlPortForward ports(int localPort, int targetPort) {
     localPorts.add(localPort);
     targetPorts.add(targetPort);
+    return this;
+  }
+
+  public KubectlPortForward onUnhandledError(Consumer<Throwable> onUnhandledError) {
+    this.onUnhandledError = onUnhandledError;
     return this;
   }
 
@@ -70,45 +79,46 @@ public class KubectlPortForward
   private void executeInternal()
       throws ApiException, KubectlException, IOException, InterruptedException {
     PortForward pf = new PortForward(apiClient);
-    PortForward.PortForwardResult result = pf.forward(namespace, name, targetPorts);
-    if (result == null) {
-      throw new KubectlException("PortForward failed!");
-    }
     // TODO: Convert this to NIO to reduce the number of threads?
     List<Thread> threads = new ArrayList<>();
     for (int i = 0; i < localPorts.size(); i++) {
       int targetPort = targetPorts.get(i);
       threads.add(
-          portForward(
-              new ServerSocket(localPorts.get(i)),
-              result.getInputStream(targetPort),
-              result.getOutboundStream(targetPort)));
+          portForward(pf,
+              new ServerSocket(localPorts.get(i)), targetPort));
     }
     for (Thread t : threads) {
       t.join();
     }
   }
 
-  private Thread portForward(ServerSocket server, InputStream in, OutputStream out) {
-    Thread t =
-        new Thread(
-            new Runnable() {
-              @Override
-              public void run() {
-                while (running) {
-                  try {
-                    Socket sock = server.accept();
-                    Thread t1 = copyAsync(sock.getInputStream(), out);
-                    Thread t2 = copyAsync(in, sock.getOutputStream());
-
-                    t1.join();
-                    t2.join();
-                  } catch (InterruptedException | IOException ex) {
-                    ex.printStackTrace();
-                  }
+  private Thread portForward(PortForward pf, ServerSocket server, int targetPort) {
+    Thread t = new Thread(
+        new Runnable() {
+          @Override
+          public void run() {
+            while (running) {
+              try (Socket sock = server.accept()) {
+                PortForward.PortForwardResult result = pf.forward(namespace, name, Arrays.asList(targetPort));
+                if (result == null) {
+                  throw new KubectlException("PortForward failed!");
                 }
+                InputStream in = result.getInputStream(targetPort);
+                OutputStream out = result.getOutboundStream(targetPort);
+                Thread t1 = copyAsync(sock.getInputStream(), out, onUnhandledError);
+                Thread t2 = copyAsync(in, sock.getOutputStream(), onUnhandledError);
+
+                t1.join();
+                in.close();
+                t2.join();
+              } catch (Exception ex) {
+                Optional.ofNullable(onUnhandledError)
+                    .orElse(Throwable::printStackTrace)
+                    .accept(ex);
               }
-            });
+            }
+          }
+        });
     t.start();
     return t;
   }

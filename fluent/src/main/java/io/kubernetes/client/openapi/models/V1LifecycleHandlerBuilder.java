@@ -1,88 +1,34 @@
-/*
-Copyright 2022 The Kubernetes Authors.
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package io.kubernetes.client.openapi.models;
 
 import io.kubernetes.client.fluent.VisitableBuilder;
-
-public class V1LifecycleHandlerBuilder
-    extends V1LifecycleHandlerFluentImpl<V1LifecycleHandlerBuilder>
-    implements VisitableBuilder<
-        io.kubernetes.client.openapi.models.V1LifecycleHandler,
-        io.kubernetes.client.openapi.models.V1LifecycleHandlerBuilder> {
+public class V1LifecycleHandlerBuilder extends V1LifecycleHandlerFluent<V1LifecycleHandlerBuilder> implements VisitableBuilder<V1LifecycleHandler,V1LifecycleHandlerBuilder>{
   public V1LifecycleHandlerBuilder() {
-    this(false);
+    this(new V1LifecycleHandler());
   }
-
-  public V1LifecycleHandlerBuilder(Boolean validationEnabled) {
-    this(new V1LifecycleHandler(), validationEnabled);
-  }
-
+  
   public V1LifecycleHandlerBuilder(V1LifecycleHandlerFluent<?> fluent) {
-    this(fluent, false);
+    this(fluent, new V1LifecycleHandler());
   }
-
-  public V1LifecycleHandlerBuilder(
-      io.kubernetes.client.openapi.models.V1LifecycleHandlerFluent<?> fluent,
-      java.lang.Boolean validationEnabled) {
-    this(fluent, new V1LifecycleHandler(), validationEnabled);
-  }
-
-  public V1LifecycleHandlerBuilder(
-      io.kubernetes.client.openapi.models.V1LifecycleHandlerFluent<?> fluent,
-      io.kubernetes.client.openapi.models.V1LifecycleHandler instance) {
-    this(fluent, instance, false);
-  }
-
-  public V1LifecycleHandlerBuilder(
-      io.kubernetes.client.openapi.models.V1LifecycleHandlerFluent<?> fluent,
-      io.kubernetes.client.openapi.models.V1LifecycleHandler instance,
-      java.lang.Boolean validationEnabled) {
+  
+  public V1LifecycleHandlerBuilder(V1LifecycleHandlerFluent<?> fluent,V1LifecycleHandler instance) {
     this.fluent = fluent;
-    fluent.withExec(instance.getExec());
-
-    fluent.withHttpGet(instance.getHttpGet());
-
-    fluent.withTcpSocket(instance.getTcpSocket());
-
-    this.validationEnabled = validationEnabled;
+    fluent.copyInstance(instance);
   }
-
-  public V1LifecycleHandlerBuilder(
-      io.kubernetes.client.openapi.models.V1LifecycleHandler instance) {
-    this(instance, false);
-  }
-
-  public V1LifecycleHandlerBuilder(
-      io.kubernetes.client.openapi.models.V1LifecycleHandler instance,
-      java.lang.Boolean validationEnabled) {
+  
+  public V1LifecycleHandlerBuilder(V1LifecycleHandler instance) {
     this.fluent = this;
-    this.withExec(instance.getExec());
-
-    this.withHttpGet(instance.getHttpGet());
-
-    this.withTcpSocket(instance.getTcpSocket());
-
-    this.validationEnabled = validationEnabled;
+    this.copyInstance(instance);
   }
-
-  io.kubernetes.client.openapi.models.V1LifecycleHandlerFluent<?> fluent;
-  java.lang.Boolean validationEnabled;
-
-  public io.kubernetes.client.openapi.models.V1LifecycleHandler build() {
+  V1LifecycleHandlerFluent<?> fluent;
+  
+  public V1LifecycleHandler build() {
     V1LifecycleHandler buildable = new V1LifecycleHandler();
-    buildable.setExec(fluent.getExec());
-    buildable.setHttpGet(fluent.getHttpGet());
-    buildable.setTcpSocket(fluent.getTcpSocket());
+    buildable.setExec(fluent.buildExec());
+    buildable.setHttpGet(fluent.buildHttpGet());
+    buildable.setSleep(fluent.buildSleep());
+    buildable.setTcpSocket(fluent.buildTcpSocket());
     return buildable;
   }
+  
+
 }
