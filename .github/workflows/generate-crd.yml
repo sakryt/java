@@ -5,15 +5,15 @@ on:
       crds:
         type: string
         required: true
-        description: https://raw.githubusercontent.com/sakryt/java/master/crd/keda.yaml
+        description: 'Comma-separated paths to CRD yaml sources, can be either HTTP url or local file path.'
       generatingJavaPackage:
         type: string
         required: true
-        description: com.yinhai.yhcm.kubernetes
+        description: 'The package name of the generated java project.'
       crdApiGroupPrefix:
         type: string
         required: false
-        description: ''
+        description: 'The prefix of the target CRDs api group to generate. (Optional)'
 
 env:
   IMAGE_NAME: ghcr.io/kubernetes-client/java/crd-model-gen
