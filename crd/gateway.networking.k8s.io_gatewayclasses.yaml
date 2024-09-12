@@ -8,7 +8,7 @@ metadata:
   creationTimestamp: null
   name: gatewayclasses.gateway.networking.k8s.io
 spec:
-  group: gateway.networking.k8s.io
+  group: gateway.networking.cloud
   names:
     categories:
     - gateway-api
